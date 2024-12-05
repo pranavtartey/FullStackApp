@@ -1,0 +1,17 @@
+name: "assignment-app"
+
+services:
+  db:
+    container_name: assignment_postgres
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - assignment-volume:/var/lib/postgres/data
+
+volumes:
+  assignment-volume:

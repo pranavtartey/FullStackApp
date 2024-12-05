@@ -11,7 +11,7 @@ app.use("/api/v1", router);
 
 app.all("*", (req, res) => {
     res.status(200).json({
-        message: "I guess this is the catch all route!!"
+        message: "Where do you think you are going with that request mate"
     })
 })
 
