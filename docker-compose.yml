@@ -11,7 +11,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_DB: postgres
     volumes:
-      - assignment-volume:/var/lib/postgres/data
+      - assignment_volume:/var/lib/postgresql/data
 
 volumes:
-  assignment-volume:
+  assignment_volume:

@@ -15,11 +15,11 @@ datasource db {
 
 model Item {
   id          Int       @id @unique
-  title       String?
-  price       Int?
-  description String?
-  category    String?
-  image       String?
-  sold        Boolean? @default(false)
-  dateOfSale  DateTime?
+  title       String
+  price       Int
+  description String
+  category    String
+  image       String
+  sold        Boolean @default(false)
+  dateOfSale  DateTime
 }
