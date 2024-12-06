@@ -183,3 +183,50 @@ export const getBarChartForMonth = async (req: Request, res: Response) => {
 
 
 }
+
+export const getPieChartForMonth = async (req: Request, res: Response) => {
+    try {
+
+        const month = Number(req.body.month);
+
+        if (!month) {
+            res.status(400).json({
+                message: "please provide a month"
+            })
+            return;
+        }
+        if (month > 12 || month < 1) {
+            res.status(400).json({
+                message: "please provide a valid month!!"
+            })
+            return;
+        }
+
+        const items = await prisma.item.findMany();
+
+        const filteredItems = items.filter((item) => {
+            if (!item.dateOfSale) return false;
+            const itemDate = new Date(item.dateOfSale);
+            return itemDate.getMonth() + 1 === month;
+        });
+
+        const categoryMap = new Map<string, number>()
+
+        filteredItems.forEach(item => {
+            const currentCount = categoryMap.get(item.category) || 0
+            categoryMap.set(item.category, currentCount + 1)
+        })
+
+        const result = Array.from(categoryMap, ([category, count]) => ({
+            category,
+            count,
+        }));
+
+        console.log("This is your map : ", categoryMap)
+
+        res.status(200).json(result)
+    } catch (e) {
+        console.error("Something went wrong in the getPieChartForMonth controller : ", e)
+    }
+
+}
