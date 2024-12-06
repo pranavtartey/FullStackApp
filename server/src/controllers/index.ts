@@ -166,7 +166,7 @@ export const getBarChartForMonth = async (req: Request, res: Response) => {
                 return item.price >= range.min && item.price <= range.max
             }).length
 
-            return { range, count }
+            return { range: range.max === Infinity ? "> 900" : `${range.min} - ${range.max}`, count }
 
         })
 
