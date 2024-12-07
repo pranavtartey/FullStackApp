@@ -55,7 +55,7 @@ const Dashboard = () => {
 
   const monthChangeHandler = (value: string) => {
     setMonth(value);
-    console.log(`This is your select month value : ${month}`);
+    // console.log(`This is your select month value : ${month}`);
   };
 
   const searchHandler: ChangeEventHandler<HTMLInputElement> = (

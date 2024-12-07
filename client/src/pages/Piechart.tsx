@@ -35,12 +35,19 @@ const chartConfig = {
     color: "hsl(var(--chart-3))",
   },
   womenClothing: {
-    label: "womenClothing",
+    label: "Women's clothing",
     color: "hsl(var(--chart-4))",
   },
 } satisfies ChartConfig;
 
 type PieChartDataType = z.infer<typeof PieChartSchema>;
+
+const getColor = (item : PieChartDataType) => {
+    if(item.category === 'jewelery') return `var(--color-jewelery)`
+    else if(item.category === "men's clothing") return `var(--color-menCothing)`
+    else if(item.category === "women's clothing") return `var(--color-womenClothing)`
+    else return `var(--color-electronics)`
+}
 
 export function Piechart({ month }: { month: string }) {
   const [chartData, setChartData] = useState<PieChartDataType[]>([]);
@@ -53,12 +60,13 @@ export function Piechart({ month }: { month: string }) {
         }/api/v1/month-pie-chart?month=${month}`
       );
       const data = response.data.result;
-      const modifiedData = data.map((item : PieChartDataType) => ({
-        category : item.category,
-        count : item.count,
-        fill : `var(--color-${item.category})`
-      }))
+      const modifiedData = data.map((item: PieChartDataType) => ({
+        category: item.category,
+        count: item.count,
+        fill: `${getColor(item)}`,
+      }));
       setChartData(modifiedData);
+    //   console.log(modifiedData);
     };
     getData();
   }, []);
