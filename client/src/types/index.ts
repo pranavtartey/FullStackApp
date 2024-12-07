@@ -19,3 +19,9 @@ export const PieChartSchema = z.object({
     category: z.string(),
     count: z.number()
 })
+
+export const MonthStatsSchema = z.object({
+    totalAmount: z.number(),
+    soldItemsCount: z.number(),
+    unSoldItemsCount: z.number()
+})

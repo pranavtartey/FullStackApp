@@ -31,6 +31,7 @@ import {
 } from "@/components/ui/dialog";
 import Barchart from "./BarChart";
 import Piechart from "./Piechart";
+import MonthStats from "./MonthStats";
 
 type TransactionType = z.infer<typeof TransactionSchema>;
 
@@ -168,6 +169,19 @@ const Dashboard = () => {
             <DialogHeader>
               <DialogTitle>Pie Chart For - {wordMonth(month)}</DialogTitle>
               <Piechart month={month} />
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
+        <Dialog>
+          <DialogTrigger>
+            <button className="border bg-slate-700 text-zinc-300 p-3 rounded-lg hover:text-white transition">
+              Generate Month Stats
+            </button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Month Stats For - {wordMonth(month)}</DialogTitle>
+              <MonthStats month={month} />
             </DialogHeader>
           </DialogContent>
         </Dialog>
