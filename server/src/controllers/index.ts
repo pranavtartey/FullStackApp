@@ -89,21 +89,19 @@ export const monthStats = async (req: Request, res: Response) => {
             return;
         }
 
-        const { month, year } = parsedData.data;
-        if (!month || !year) {
+        const { month } = parsedData.data;
+        if (!month) {
             res.status(400).json({ message: "Month and year are required." });
             return;
         }
         let totalAmount = 0;
         let soldItemsCount = 0;
         let unSoldItemsCount = 0;
-        const startOfMonth = new Date(`${year}-${month}-01T00:00:00.000Z`)
-        const endOfMonth = new Date(new Date(startOfMonth).setMonth(startOfMonth.getMonth() + 1))
+
         const results = await prisma.item.findMany({
             where: {
                 dateOfSale: {
-                    gte: startOfMonth,
-                    lt: endOfMonth,
+                    contains: `-${month.padStart(2, "0")}-`
                 },
             },
         });
@@ -141,31 +139,15 @@ export const getBarChartForMonth = async (req: Request, res: Response) => {
             return
         }
 
-        const month = Number(parsedData.data.month)
-        if (!month) {
-            res.status(400).json({
-                message: "Month is required!! :("
-            })
-            return;
-        }
+        const month = parsedData.data.month
 
-        if (month > 12 || month < 1) {
-            res.status(400).json({
-                message: "How many exact months did your teacher teach you mate!!"
-            })
-
-            return;
-        }
-
-        const items = await prisma.item.findMany();
-
-        const filteredItems = items.filter((item) => {
-            if (!item.dateOfSale) return false;
-            const itemDate = new Date(item.dateOfSale);
-            return itemDate.getMonth() + 1 === month;
+        const items = await prisma.item.findMany({
+            where: {
+                dateOfSale: {
+                    contains: `-${month.padStart(2, "0")}-`
+                }
+            }
         });
-
-        // console.log("This is your filtered items based on month :", filteredItems)
 
         const priceRanges = [
             { min: 0, max: 100 },
@@ -181,7 +163,7 @@ export const getBarChartForMonth = async (req: Request, res: Response) => {
         ];
 
         const barChartRange = priceRanges.map(range => {
-            const count = filteredItems.filter(item => {
+            const count = items.filter(item => {
                 return item.price >= range.min && item.price <= range.max
             }).length
 
@@ -191,7 +173,7 @@ export const getBarChartForMonth = async (req: Request, res: Response) => {
 
         res.status(200).json(
             {
-                filteredItems,
+                items,
                 barChartRange
             }
         );
@@ -214,32 +196,19 @@ export const getPieChartForMonth = async (req: Request, res: Response) => {
             return
         }
 
-        const month = Number(parsedData.data.month)
+        const month = parsedData.data.month
 
-        if (!month) {
-            res.status(400).json({
-                message: "please provide a month"
-            })
-            return;
-        }
-        if (month > 12 || month < 1) {
-            res.status(400).json({
-                message: "please provide a valid month!!"
-            })
-            return;
-        }
-
-        const items = await prisma.item.findMany();
-
-        const filteredItems = items.filter((item) => {
-            if (!item.dateOfSale) return false;
-            const itemDate = new Date(item.dateOfSale);
-            return itemDate.getMonth() + 1 === month;
+        const items = await prisma.item.findMany({
+            where: {
+                dateOfSale: {
+                    contains: `-${month.padStart(2, "0")}-`
+                }
+            }
         });
 
         const categoryMap = new Map<string, number>()
 
-        filteredItems.forEach(item => {
+        items.forEach(item => {
             const currentCount = categoryMap.get(item.category) || 0
             categoryMap.set(item.category, currentCount + 1)
         })
@@ -251,7 +220,12 @@ export const getPieChartForMonth = async (req: Request, res: Response) => {
 
         console.log("This is your map : ", categoryMap)
 
-        res.status(200).json(result)
+        res.status(200).json(
+            {
+                result,
+                items
+            }
+        )
     } catch (e) {
         console.error("Something went wrong in the getPieChartForMonth controller : ", e)
     }
