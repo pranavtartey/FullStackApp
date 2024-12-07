@@ -8,5 +8,6 @@ router.get("/seed-data", seedDb)
 router.get("/get-transaction", getTransactions)
 router.get("/month-stats", monthStats)
 router.get("/month-bar-chart", getBarChartForMonth);
-router.get("/month-pie-chart", getPieChartForMonth)
+router.get("/month-pie-chart", getPieChartForMonth);
+
 export { router };

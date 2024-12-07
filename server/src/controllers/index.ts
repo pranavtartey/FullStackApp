@@ -1,6 +1,7 @@
 import axios from "axios"
 import { Request, Response } from "express"
 import prisma from "../db"
+import { ChartSchema, MonthStatSchema } from "../types"
 
 
 export const test = (req: Request, res: Response) => {
@@ -78,7 +79,17 @@ export const getTransactions = async (req: Request, res: Response) => {
 export const monthStats = async (req: Request, res: Response) => {
 
     try {
-        const { month, year } = req.body
+        // console.log("Your req.body : ", req.body)
+        const parsedData = MonthStatSchema.safeParse(req.body);
+        if (!parsedData.success) {
+            res.status(400).json({
+                message: "zodd validatin failed in monthStats controller",
+                parsedData
+            })
+            return;
+        }
+
+        const { month, year } = parsedData.data;
         if (!month || !year) {
             res.status(400).json({ message: "Month and year are required." });
             return;
@@ -122,7 +133,15 @@ export const getBarChartForMonth = async (req: Request, res: Response) => {
 
     try {
 
-        const month = Number(req.body.month)
+        const parsedData = ChartSchema.safeParse(req.body);
+        if (!parsedData.success) {
+            res.status(400).json({
+                message: "zod validation failed in getBarChartForMonth controller"
+            })
+            return
+        }
+
+        const month = Number(parsedData.data.month)
         if (!month) {
             res.status(400).json({
                 message: "Month is required!! :("
@@ -187,7 +206,15 @@ export const getBarChartForMonth = async (req: Request, res: Response) => {
 export const getPieChartForMonth = async (req: Request, res: Response) => {
     try {
 
-        const month = Number(req.body.month);
+        const parsedData = ChartSchema.safeParse(req.body);
+        if (!parsedData.success) {
+            res.status(400).json({
+                message: "zod validation failed in getPieChartForMonth controller"
+            })
+            return
+        }
+
+        const month = Number(parsedData.data.month)
 
         if (!month) {
             res.status(400).json({
