@@ -9,3 +9,13 @@ export const TransactionSchema = z.object({
     sold: z.boolean(),
     image: z.string()
 })
+
+export const BarChartSchema = z.object({
+    range: z.string(),
+    count: z.number()
+})
+
+export const PieChartSchema = z.object({
+    category: z.string(),
+    count: z.number()
+})

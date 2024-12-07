@@ -22,6 +22,15 @@ import {
   useState,
 } from "react";
 import { z } from "zod";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import Barchart from "./BarChart";
+import Piechart from "./Piechart";
 
 type TransactionType = z.infer<typeof TransactionSchema>;
 
@@ -107,12 +116,32 @@ const Dashboard = () => {
         </div>
       </div>
       <div className="flex gap-3  p-2 items-center justify-center">
-        <button className="border bg-slate-700 text-zinc-300 p-3 rounded-lg hover:text-white transition">
-          Generate Bar Chart
-        </button>
-        <button className="border bg-slate-700 text-zinc-300 p-3 rounded-lg hover:text-white transition">
-          Generate Pie Chart
-        </button>
+        <Dialog>
+          <DialogTrigger>
+            <button className="border bg-slate-700 text-zinc-300 p-3 rounded-lg hover:text-white transition">
+              Generate Bar Chart
+            </button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Bar Chart - {month}</DialogTitle>
+              <Barchart month={month} />
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
+        <Dialog>
+          <DialogTrigger>
+            <button className="border bg-slate-700 text-zinc-300 p-3 rounded-lg hover:text-white transition">
+              Generate Pie Chart
+            </button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Pie Chart - {month}</DialogTitle>
+              <Piechart month={month} />
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
       </div>
       <div className="container mx-auto py-10">
         <DataTable columns={columns} data={tableData} />
