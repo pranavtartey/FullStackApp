@@ -83,7 +83,7 @@ const Dashboard = () => {
           </form>
 
           <Select value={month} onValueChange={monthChangeHandler}>
-            <SelectTrigger className="w-[180px] border rounded-md border-black-400">
+            <SelectTrigger className="w-[180px] border rounded-md border-black-400 hover:bg-slate-700 hover:text-white transition">
               <SelectValue placeholder="Select a month" />
             </SelectTrigger>
             <SelectContent>
@@ -105,6 +105,14 @@ const Dashboard = () => {
             </SelectContent>
           </Select>
         </div>
+      </div>
+      <div className="flex gap-3  p-2 items-center justify-center">
+        <button className="border bg-slate-700 text-zinc-300 p-3 rounded-lg hover:text-white transition">
+          Generate Bar Chart
+        </button>
+        <button className="border bg-slate-700 text-zinc-300 p-3 rounded-lg hover:text-white transition">
+          Generate Pie Chart
+        </button>
       </div>
       <div className="container mx-auto py-10">
         <DataTable columns={columns} data={tableData} />
