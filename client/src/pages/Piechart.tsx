@@ -42,12 +42,13 @@ const chartConfig = {
 
 type PieChartDataType = z.infer<typeof PieChartSchema>;
 
-const getColor = (item : PieChartDataType) => {
-    if(item.category === 'jewelery') return `var(--color-jewelery)`
-    else if(item.category === "men's clothing") return `var(--color-menCothing)`
-    else if(item.category === "women's clothing") return `var(--color-womenClothing)`
-    else return `var(--color-electronics)`
-}
+const getColor = (item: PieChartDataType) => {
+  if (item.category === "jewelery") return `var(--color-jewelery)`;
+  else if (item.category === "men's clothing") return `var(--color-menCothing)`;
+  else if (item.category === "women's clothing")
+    return `var(--color-womenClothing)`;
+  else return `var(--color-electronics)`;
+};
 
 export function Piechart({ month }: { month: string }) {
   const [chartData, setChartData] = useState<PieChartDataType[]>([]);
@@ -66,15 +67,45 @@ export function Piechart({ month }: { month: string }) {
         fill: `${getColor(item)}`,
       }));
       setChartData(modifiedData);
-    //   console.log(modifiedData);
+      //   console.log(modifiedData);
     };
     getData();
   }, []);
+
+  const wordMonth = (month: string) => {
+    switch (month) {
+      case "1":
+        return "January";
+      case "2":
+        return "Feburary";
+      case "3":
+        return "March";
+      case "4":
+        return "April";
+      case "5":
+        return "May";
+      case "6":
+        return "June";
+      case "7":
+        return "July";
+      case "8":
+        return "August";
+      case "9":
+        return "September";
+      case "10":
+        return "October";
+      case "11":
+        return "November";
+      case "12":
+        return "December";
+    }
+  };
+
   return (
     <Card className="flex flex-col">
       <CardHeader className="items-center pb-0">
         <CardTitle>Pie Chart</CardTitle>
-        <CardDescription>{month}'s Data</CardDescription>
+        <CardDescription>{wordMonth(month)}'s Data</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer
