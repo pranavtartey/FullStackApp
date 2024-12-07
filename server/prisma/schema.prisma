@@ -16,7 +16,7 @@ datasource db {
 model Item {
   id          Int       @id @unique
   title       String
-  price       Int
+  price       String
   description String
   category    String
   image       String

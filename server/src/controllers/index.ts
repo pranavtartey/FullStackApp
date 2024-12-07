@@ -33,15 +33,17 @@ export const seedDb = async (req: Request, res: Response) => {
 
 export const getTransactions = async (req: Request, res: Response) => {
     try {
+        console.log("This is your req.body : ", req.body)
         console.log("This is the query you are lookin for : ", req.query)
-        const search = (req.query.search as string) || "";
+        const search = (req.query.search as string) || " ";
+        const month = req.query.month as string || "3"
         const take = 10;
         const page = Number(req.query.page) || 1
         const skip = (page - 1) * take
         const results = await prisma.item.findMany({
             skip,
             take,
-            where: search ? {
+            where: {
                 OR: [
                     {
                         title: {
@@ -57,12 +59,16 @@ export const getTransactions = async (req: Request, res: Response) => {
                     },
                     {
                         price: {
-                            equals: search ? Number(search) : undefined,
+                            contains: search,
+                            mode: "insensitive"
                         },
                     }
-                ]
+                ],
+                dateOfSale: {
+                    contains: `-${month.padStart(2, "0")}-`
+                }
             }
-                : undefined
+
         })
         res.status(200).json(results)
 
@@ -80,7 +86,8 @@ export const monthStats = async (req: Request, res: Response) => {
 
     try {
         // console.log("Your req.body : ", req.body)
-        const parsedData = MonthStatSchema.safeParse(req.body);
+        const month = (req.query.month as string) || "3" 
+        const parsedData = MonthStatSchema.safeParse(month);
         if (!parsedData.success) {
             res.status(400).json({
                 message: "zodd validatin failed in monthStats controller",
@@ -89,7 +96,6 @@ export const monthStats = async (req: Request, res: Response) => {
             return;
         }
 
-        const { month } = parsedData.data;
         if (!month) {
             res.status(400).json({ message: "Month and year are required." });
             return;
@@ -107,7 +113,7 @@ export const monthStats = async (req: Request, res: Response) => {
         });
 
         results.forEach(item => {
-            totalAmount += item.price!
+            totalAmount += Number(item.price!)
             if (item.sold) soldItemsCount++
             else unSoldItemsCount++
         })
@@ -130,8 +136,8 @@ export const monthStats = async (req: Request, res: Response) => {
 export const getBarChartForMonth = async (req: Request, res: Response) => {
 
     try {
-
-        const parsedData = ChartSchema.safeParse(req.body);
+const month = (req.query.month as string) || "3"
+        const parsedData = ChartSchema.safeParse(month);
         if (!parsedData.success) {
             res.status(400).json({
                 message: "zod validation failed in getBarChartForMonth controller"
@@ -139,7 +145,7 @@ export const getBarChartForMonth = async (req: Request, res: Response) => {
             return
         }
 
-        const month = parsedData.data.month
+        
 
         const items = await prisma.item.findMany({
             where: {
@@ -164,7 +170,7 @@ export const getBarChartForMonth = async (req: Request, res: Response) => {
 
         const barChartRange = priceRanges.map(range => {
             const count = items.filter(item => {
-                return item.price >= range.min && item.price <= range.max
+                return Number(item.price) >= range.min && Number(item.price) <= range.max
             }).length
 
             return { range: range.max === Infinity ? "> 900" : `${range.min} - ${range.max}`, count }
@@ -187,16 +193,14 @@ export const getBarChartForMonth = async (req: Request, res: Response) => {
 
 export const getPieChartForMonth = async (req: Request, res: Response) => {
     try {
-
-        const parsedData = ChartSchema.safeParse(req.body);
+        const month = (req.query.month as string) || "3"
+        const parsedData = ChartSchema.safeParse(month);
         if (!parsedData.success) {
             res.status(400).json({
                 message: "zod validation failed in getPieChartForMonth controller"
             })
             return
         }
-
-        const month = parsedData.data.month
 
         const items = await prisma.item.findMany({
             where: {
