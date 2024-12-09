@@ -10,26 +10,26 @@ export const test = (req: Request, res: Response) => {
     })
 }
 
-export const seedDb = async (req: Request, res: Response) => {
-    try {
-        const { data } = await axios.get("https://s3.amazonaws.com/roxiler.com/product_transaction.json")
-        // Sir/ma'am I would have put this in the .env file but then there would be no data to seed as I have not defined any data for seeding and just used the values provided by the company
+// export const seedDb = async (req: Request, res: Response) => {
+//     try {
+//         const { data } = await axios.get("https://s3.amazonaws.com/roxiler.com/product_transaction.json")
+//         // Sir/ma'am I would have put this in the .env file but then there would be no data to seed as I have not defined any data for seeding and just used the values provided by the company
 
-        const dbData = await prisma.item.createMany({
-            data
-        })
+//         const dbData = await prisma.item.createMany({
+//             data
+//         })
 
-        res.status(200).json({
-            dbData
-        })
+//         res.status(200).json({
+//             dbData
+//         })
 
-    } catch (e) {
-        console.error("Something went wrong in the seedDb controller", e)
-        res.status(400).json({
-            message: "Something went wrong in the seedDb controller"
-        })
-    }
-}
+//     } catch (e) {
+//         console.error("Something went wrong in the seedDb controller", e)
+//         res.status(400).json({
+//             message: "Something went wrong in the seedDb controller"
+//         })
+//     }
+// }
 
 export const getTransactions = async (req: Request, res: Response) => {
     try {
