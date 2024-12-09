@@ -1,7 +1,8 @@
 import { PrismaClient } from "@prisma/client";
-import axios from "axios";
 
 const prisma = new PrismaClient();
+
+//Run "npx prisma db seed" command to seed the database
 
 const seedDb = async () => {
     try {
